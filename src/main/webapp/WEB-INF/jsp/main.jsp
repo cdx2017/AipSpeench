@@ -24,7 +24,7 @@
 
         <button onclick="startRecording(this);">录音</button>
         <button onclick="stopRecording(this);" disabled>停止</button>
-
+        <button onclick="DownloadWav();" >下载</button>
         <h2>录音文件</h2>
         <ul id="recordingslist"></ul>
 

@@ -37,7 +37,11 @@ public class VoiceToTextUtil {
         //System.setProperty("aip.log4j.conf", "log4j.properties");
 
         // 调用接口
-        JSONObject res = client.asr(PcmPath, "wav", PcmRate, null);
+        JSONObject res = client.asr(PcmPath, "pcm", PcmRate, null);
         return res.toString(2);
     }
+
+    /*public static void main(String[] args) {
+        System.out.println( VoiceToTextUtil.PcmToString("C:/Users/DX/Desktop/music/7.pcm",16000));
+    }*/
 }

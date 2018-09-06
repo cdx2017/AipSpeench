@@ -59,8 +59,19 @@ function createDownloadLink() {
         li.appendChild(au);
         li.appendChild(hf);
         recordingslist.appendChild(li);
+        forceDownload(url,hf.download);
     });
 }
+
+
+function forceDownload(blob, filename) {
+    var a = document.createElement('a');
+    a.download = filename;
+    a.href = blob;
+    a.click();
+}
+
+
 
 /*页面初始化*/
 window.onload = function init() {

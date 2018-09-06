@@ -14,5 +14,13 @@ public class OneController {
     public String main() {
         return "main";
     }
+    @GetMapping("/main")
+    public String main1() {
+        return "main";
+    }
+    @GetMapping("/upload")
+    public String upload() {
+        return "upload";
+    }
 
 }
