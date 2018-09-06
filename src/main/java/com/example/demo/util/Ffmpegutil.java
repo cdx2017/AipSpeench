@@ -1,21 +1,14 @@
 package com.example.demo.util;
 
+import org.springframework.stereotype.Component;
+
 import java.io.File;
 
 /**
  * Created by DX on 2018/9/5.
  */
-public class Ffmpegutil {
-
-    public static void main(String[] args) {
-        String sPath = "C:\\Users\\DX\\Desktop\\music\\3.wav";
-        String tPath = "C:\\Users\\DX\\Desktop\\music\\3.pcm";
-        try {
-            new Ffmpegutil().changeAmrToMp3(sPath, tPath);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+@Component
+public class FfmpegUtil {
 
     public static void changeAmrToMp3(String sourcePath, String targetPath) {
         String webroot = "src/main/webapp/ffmpeg/bin";
@@ -43,4 +36,14 @@ public class Ffmpegutil {
             run.freeMemory();
         }
     }
+
+    /*public static void main(String[] args) {
+        String sPath = "blob:http://localhost:8998/6e501044-404f-4cbb-982c-c011b99700b8";
+        String tPath = "C:\\Users\\DX\\Desktop\\music\\8.pcm";
+        try {
+            new FfmpegUtil().changeAmrToMp3(sPath, tPath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }*/
 }
