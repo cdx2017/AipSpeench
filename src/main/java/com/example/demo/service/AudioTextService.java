@@ -37,17 +37,16 @@ public class AudioTextService {
         /*通过*/
         if (source.contains(".pcm")) {
             target = source;
+            return voiceToTextUtil.PcmToString(target, rate);
         } else {
             ffmpegUtil.changeAmrToMp3(source, target);
+            return voiceToTextUtil.PcmToString(target, rate);
         }
-
-        return voiceToTextUtil.PcmToString(target, rate);
     }
 
     /*public static void main(String[] args) {
-        int rate = 16000;*//*比率*//*
-        *//*String filepath = "C:/Users/DX/Desktop/music/你好.mp3";*//**//*mp3文件地址*//*
-        String filepath = "C:/Users/DX/Desktop/music/3.wav";*//*mp3文件地址*//*
+        int rate = 16000;//比率
+        String filepath = "src/main/webapp/music/origin.pcm";//mp3文件地址
         AudioTextService audioTextService = new AudioTextService();
         System.out.println(audioTextService.AdToTx(filepath, rate));
     }*/

@@ -8,7 +8,7 @@
 </style>
 <body>
 <p align="center"> 请您选择需要上传的文件</p>
-<form id="form1" name="form1" method="post" action="/api/v1/uploadFile" enctype="multipart/form-data">
+<form id="form1" name="form1" method="post" action="/route/uploadFile" enctype="multipart/form-data">
     <table border="0" align="center">
         <tr>
             <td>上传人：</td>

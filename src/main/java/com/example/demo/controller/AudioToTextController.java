@@ -1,59 +1,47 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.LearnFile;
 import com.example.demo.service.AudioTextService;
 
+import com.example.demo.service.FileService;
 import com.example.demo.service.UploadFileService;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 
 /**
  * @author cdx
  */
-@RestController
+@Controller
 @RequestMapping("/api/v1")
 public class AudioToTextController {
-    @Autowired
-    private UploadFileService uploadFileService;
+
     @Autowired
     private AudioTextService audioTextService;
 
-    /**
-     * ä¸Šä¼ éŸ³é¢‘
-     *
-     * @param file æ–‡ä»¶æ ¼å¼
-     */
-    @ApiOperation(value = "ä¸Šä¼ éŸ³é¢‘", notes = "ä¸Šä¼ éŸ³é¢‘")
-    @ApiImplicitParam(name = "file", value = "éŸ³é¢‘æ ¼å¼", required = false, dataType = "String", paramType = "query")
-    @PostMapping(value = "/uploadFile")
-    public String uploadFile(@RequestBody LearnFile file, HttpServletRequest request) {
-
-        if (uploadFileService.uploadFile(file, request))
-            return file.toString();
-        else
-            return "fail";
-    }
+    @Autowired
+    private FileService fileService;
 
     /**
-     * éŸ³é¢‘è½¬åŒ–ä¸ºæ–‡å­—
+     * ÒôÆµ×ª»¯ÎªÎÄ×Ö
      *
      * @param source
      * @param rate
-     * @return è¿”å›è¯†åˆ«ç»“æœ
+     * @return ·µ»ØÊ¶±ğ½á¹û
      */
-    @ApiOperation(value = "è¯­éŸ³è¯†åˆ«", notes = "è¯­éŸ³è¯†åˆ«")
+    @ApiOperation(value = "ÓïÒôÊ¶±ğ", notes = "ÓïÒôÊ¶±ğ")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "source", value = "éŸ³é¢‘æ¥æºåœ°å€", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "rate", value = "éŸ³é¢‘è½¬åŒ–æ¯”ç‡", required = true, dataType = "int", paramType = "query", defaultValue = "16000")
+            @ApiImplicitParam(name = "source", value = "ÒôÆµÀ´Ô´µØÖ·", required = true, dataType = "String", paramType = "query",defaultValue = "src/main/webapp/music/"),
+            @ApiImplicitParam(name = "rate", value = "ÒôÆµ×ª»¯±ÈÂÊ", required = true, dataType = "int", paramType = "query", defaultValue = "16000")
     })
     @PostMapping(value = "/AudioToText")
+    @ResponseBody
     public String AudioToText(String source, int rate) {
+        if("myPath".equals(source)){
+            audioTextService.AdToTx("src/main/webapp/music/"+fileService.getFileNameFromRedis("filename"), rate);
+        }
         return audioTextService.AdToTx(source, rate);
     }
 

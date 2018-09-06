@@ -8,6 +8,7 @@ function __log(e, data) {
 
 var audio_context;
 var recorder;
+var form;
 
 /*设备环境初始化*/
 function startUserMedia(stream) {
@@ -24,6 +25,7 @@ function startUserMedia(stream) {
 
 /*开始录音*/
 function startRecording(button) {
+    alert("开始录音，点击结束按钮会自动下载已经录好的音频！");
     recorder && recorder.record();
     button.disabled = true;
     button.nextElementSibling.disabled = false;
@@ -45,7 +47,7 @@ function stopRecording(button) {
 
 /*创建下载链接*/
 function createDownloadLink() {
-    recorder && recorder.exportWAV(function(blob) {
+    recorder && recorder.exportWAV(function (blob) {
         var url = URL.createObjectURL(blob);
         var li = document.createElement('li');
         var au = document.createElement('audio');
@@ -59,7 +61,7 @@ function createDownloadLink() {
         li.appendChild(au);
         li.appendChild(hf);
         recordingslist.appendChild(li);
-        forceDownload(url,hf.download);
+        forceDownload(url, hf.download);
     });
 }
 
@@ -70,7 +72,6 @@ function forceDownload(blob, filename) {
     a.href = blob;
     a.click();
 }
-
 
 
 /*页面初始化*/
@@ -88,7 +89,8 @@ window.onload = function init() {
         alert('这个浏览器不支持网络音频设备!');
     }
 
-    navigator.getUserMedia({audio: true}, startUserMedia, function(e) {
+    navigator.getUserMedia({audio: true}, startUserMedia, function (e) {
         __log('无音频输入: ' + e);
     });
+
 };
