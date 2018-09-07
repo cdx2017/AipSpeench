@@ -8,6 +8,10 @@
         font-family: "宋体";
         font-size: 14px
     }
+
+    td {
+        word-wrap: break-word;
+    }
 </style>
 <body>
 
@@ -23,9 +27,9 @@
 </div>
 <table id="table-result" width="80%" align="center" border="1">
     <tr>
-        <th>result</th>
-        <th>err_msg</th>
-        <th>err_no</th>
+        <th width='40%'>识别结果</th>
+        <th width='20%'>返回信息</th>
+        <th width='20%'>错误代码</th>
 
     </tr>
     <tbody id="tbody-result">
@@ -34,8 +38,8 @@
 
 <script type="text/javascript">
     var tbody = window.document.getElementById("tbody-result");
-    alert("正在识别，请稍后。。。");
     function change() {
+        alert("正在识别，请稍后。。。");
         $.ajax({
             //几个参数需要注意一下
             type: "POST",//方法类型
@@ -46,9 +50,9 @@
                 var str = "";
 
                 str += "<tr>" +
-                "<td align='center'>" + result.result + "</td>" +
-                "<td align='center'>" + result.err_msg + "</td>" +
-                "<td align='center'>" + result.err_no + "</td>" +
+                "<td align='center' width='40%'>" + result.result + "</td>" +
+                "<td align='center' width='20%'>" + result.err_msg + "</td>" +
+                "<td align='center' width='20%'>" + result.err_no + "</td>" +
                 "</tr>";
 
                 tbody.innerHTML = str;

@@ -33,16 +33,17 @@ public class AudioToTextController {
      */
     @ApiOperation(value = "语音识别", notes = "语音识别")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "source", value = "音频来源地址", required = true, dataType = "String", paramType = "query",defaultValue = "src/main/webapp/music/"),
+            @ApiImplicitParam(name = "source", value = "音频来源地址", required = true, dataType = "String", paramType = "query", defaultValue = "src/main/webapp/music/"),
             @ApiImplicitParam(name = "rate", value = "音频转化比率", required = true, dataType = "int", paramType = "query", defaultValue = "16000")
     })
     @PostMapping(value = "/AudioToText")
     @ResponseBody
     public String AudioToText(String source, int rate) {
-        if("myPath".equals(source)){
-            audioTextService.AdToTx("src/main/webapp/music/"+fileService.getFileNameFromRedis("filename"), rate);
+        if ("myPath".equals(source)) {
+            return audioTextService.AdToTx(fileService.getFilePathFromRedis("filepath"), rate);
+        } else {
+            return audioTextService.AdToTx(source, rate);
         }
-        return audioTextService.AdToTx(source, rate);
     }
 
 }

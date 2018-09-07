@@ -46,7 +46,7 @@ public class AudioTextService {
 
     public static void main(String[] args) {
         int rate = 16000;//比率
-        String filepath = "E:/ChromeDownload/2.wav";//mp3文件地址
+        String filepath = "C:\\Users\\DX\\Desktop\\music/68.wav";//mp3文件地址
         AudioTextService audioTextService = new AudioTextService();
         System.out.println(audioTextService.AdToTx(filepath, rate));
     }

@@ -21,10 +21,15 @@ public class FileService {
     private RedisTemplate redisTemplate;
 
     /**
-     * @param nameKey key
+     * @param nameKey   key
      * @param nameValue value
      */
-    public void saveFileToRedis(String nameKey, String nameValue) {
+    public void saveFilePathToRedis(String nameKey, String nameValue) {
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        valueOperations.set(nameKey, nameValue, 10, TimeUnit.MINUTES);
+    }
+
+    public void saveFileTimeToRedis(String nameKey, Long nameValue) {
         ValueOperations valueOperations = redisTemplate.opsForValue();
         valueOperations.set(nameKey, nameValue, 10, TimeUnit.MINUTES);
     }
@@ -33,9 +38,14 @@ public class FileService {
      * @param nameKey key
      * @return
      */
-    public String getFileNameFromRedis(String nameKey) {
+    public String getFilePathFromRedis(String nameKey) {
         ValueOperations valueOperations = redisTemplate.opsForValue();
         String verifyName = (String) valueOperations.get(nameKey);
+        return verifyName;
+    }
+    public Long getFileTimeFromRedis(String nameKey) {
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        Long verifyName = (Long) valueOperations.get(nameKey);
         return verifyName;
     }
 }
