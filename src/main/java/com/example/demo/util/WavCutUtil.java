@@ -14,8 +14,8 @@ import java.nio.ByteBuffer;
  */
 
 /**
- * wavÒôÆµÎÄ¼ş½ØÈ¡¹¤¾ß
- * £¨ÊÊÓÃÓÚ±ÈÌØÂÊÎª128kbpsµÄwavÒôÆµÎÄ¼ş£¬´ËÀàÒôÆµÎÄ¼şµÄÍ·²¿ĞÅÏ¢Õ¼ÓÃ³¤¶È44×Ö½Ú£©
+ * wavéŸ³é¢‘æ–‡ä»¶æˆªå–å·¥å…·
+ * ï¼ˆé€‚ç”¨äºæ¯”ç‰¹ç‡ä¸º128kbpsçš„wavéŸ³é¢‘æ–‡ä»¶ï¼Œæ­¤ç±»éŸ³é¢‘æ–‡ä»¶çš„å¤´éƒ¨ä¿¡æ¯å ç”¨é•¿åº¦44å­—èŠ‚ï¼‰
  *
  * @author cdx
  */
@@ -23,14 +23,14 @@ import java.nio.ByteBuffer;
 public class WavCutUtil {
 
     /**
-     * ½ØÈ¡wavÒôÆµÎÄ¼ş
+     * æˆªå–wavéŸ³é¢‘æ–‡ä»¶
      *
-     * @param sourcefile Ô´ÎÄ¼şµØÖ·
-     * @param targetfile Ä¿±êÎÄ¼şµØÖ·
-     * @param start      ½ØÈ¡¿ªÊ¼Ê±¼ä£¨Ãë£©
-     * @param end        ½ØÈ¡½áÊøÊ±¼ä£¨Ãë£©
+     * @param sourcefile æºæ–‡ä»¶åœ°å€
+     * @param targetfile ç›®æ ‡æ–‡ä»¶åœ°å€
+     * @param start      æˆªå–å¼€å§‹æ—¶é—´ï¼ˆç§’ï¼‰
+     * @param end        æˆªå–ç»“æŸæ—¶é—´ï¼ˆç§’ï¼‰
      *                   <p>
-     *                   return  ½ØÈ¡³É¹¦·µ»Øtrue£¬·ñÔò·µ»Øfalse
+     *                   return  æˆªå–æˆåŠŸè¿”å›trueï¼Œå¦åˆ™è¿”å›false
      */
     public static boolean cut(String sourcefile, String targetfile, int start, int end) {
         try {
@@ -41,7 +41,7 @@ public class WavCutUtil {
             if (!wav.exists()) {
                 return false;
             }
-            long t1 = getTimeLen(wav);  //×ÜÊ±³¤(Ãë)
+            long t1 = getTimeLen(wav);  //æ€»æ—¶é•¿(ç§’)
             if (end == -100 || end > t1) {
                 end = (int) t1;
             }
@@ -52,37 +52,37 @@ public class WavCutUtil {
                 return false;
             }
             FileInputStream fis = new FileInputStream(wav);
-            long wavSize = wav.length() - 44;  //ÒôÆµÊı¾İ´óĞ¡£¨44Îª128kbps±ÈÌØÂÊwavÎÄ¼şÍ·³¤¶È£©
-            long splitSize = (wavSize / t1) * (end - start);  //½ØÈ¡µÄÒôÆµÊı¾İ´óĞ¡
-            long skipSize = (wavSize / t1) * start;  //½ØÈ¡Ê±Ìø¹ıµÄÒôÆµÊı¾İ´óĞ¡
+            long wavSize = wav.length() - 44;  //éŸ³é¢‘æ•°æ®å¤§å°ï¼ˆ44ä¸º128kbpsæ¯”ç‰¹ç‡wavæ–‡ä»¶å¤´é•¿åº¦ï¼‰
+            long splitSize = (wavSize / t1) * (end - start);  //æˆªå–çš„éŸ³é¢‘æ•°æ®å¤§å°
+            long skipSize = (wavSize / t1) * start;  //æˆªå–æ—¶è·³è¿‡çš„éŸ³é¢‘æ•°æ®å¤§å°
             int splitSizeInt = Integer.parseInt(String.valueOf(splitSize));
             int skipSizeInt = Integer.parseInt(String.valueOf(skipSize));
 
-            ByteBuffer buf1 = ByteBuffer.allocate(4);  //´æ·ÅÎÄ¼ş´óĞ¡,4´ú±íÒ»¸öintÕ¼ÓÃ×Ö½ÚÊı
-            buf1.putInt(splitSizeInt + 36);  //·ÅÈëÎÄ¼ş³¤¶ÈĞÅÏ¢
-            byte[] flen = buf1.array();  //´ú±íÎÄ¼ş³¤¶È
-            ByteBuffer buf2 = ByteBuffer.allocate(4);  //´æ·ÅÒôÆµÊı¾İ´óĞ¡£¬4´ú±íÒ»¸öintÕ¼ÓÃ×Ö½ÚÊı
-            buf2.putInt(splitSizeInt);  //·ÅÈëÊı¾İ³¤¶ÈĞÅÏ¢
-            byte[] dlen = buf2.array();  //´ú±íÊı¾İ³¤¶È
-            flen = reverse(flen);  //Êı×é·´×ª
+            ByteBuffer buf1 = ByteBuffer.allocate(4);  //å­˜æ”¾æ–‡ä»¶å¤§å°,4ä»£è¡¨ä¸€ä¸ªintå ç”¨å­—èŠ‚æ•°
+            buf1.putInt(splitSizeInt + 36);  //æ”¾å…¥æ–‡ä»¶é•¿åº¦ä¿¡æ¯
+            byte[] flen = buf1.array();  //ä»£è¡¨æ–‡ä»¶é•¿åº¦
+            ByteBuffer buf2 = ByteBuffer.allocate(4);  //å­˜æ”¾éŸ³é¢‘æ•°æ®å¤§å°ï¼Œ4ä»£è¡¨ä¸€ä¸ªintå ç”¨å­—èŠ‚æ•°
+            buf2.putInt(splitSizeInt);  //æ”¾å…¥æ•°æ®é•¿åº¦ä¿¡æ¯
+            byte[] dlen = buf2.array();  //ä»£è¡¨æ•°æ®é•¿åº¦
+            flen = reverse(flen);  //æ•°ç»„åè½¬
             dlen = reverse(dlen);
-            byte[] head = new byte[44];  //¶¨ÒåwavÍ·²¿ĞÅÏ¢Êı×é
-            fis.read(head, 0, head.length);  //¶ÁÈ¡Ô´wavÎÄ¼şÍ·²¿ĞÅÏ¢
-            for (int i = 0; i < 4; i++) {  //4´ú±íÒ»¸öintÕ¼ÓÃ×Ö½ÚÊı
-                head[i + 4] = flen[i];  //Ìæ»»Ô­Í·²¿ĞÅÏ¢ÀïµÄÎÄ¼ş³¤¶È
-                head[i + 40] = dlen[i];  //Ìæ»»Ô­Í·²¿ĞÅÏ¢ÀïµÄÊı¾İ³¤¶È
+            byte[] head = new byte[44];  //å®šä¹‰wavå¤´éƒ¨ä¿¡æ¯æ•°ç»„
+            fis.read(head, 0, head.length);  //è¯»å–æºwavæ–‡ä»¶å¤´éƒ¨ä¿¡æ¯
+            for (int i = 0; i < 4; i++) {  //4ä»£è¡¨ä¸€ä¸ªintå ç”¨å­—èŠ‚æ•°
+                head[i + 4] = flen[i];  //æ›¿æ¢åŸå¤´éƒ¨ä¿¡æ¯é‡Œçš„æ–‡ä»¶é•¿åº¦
+                head[i + 40] = dlen[i];  //æ›¿æ¢åŸå¤´éƒ¨ä¿¡æ¯é‡Œçš„æ•°æ®é•¿åº¦
             }
-            byte[] fbyte = new byte[splitSizeInt + head.length];  //´æ·Å½ØÈ¡µÄÒôÆµÊı¾İ
-            for (int i = 0; i < head.length; i++) {  //·ÅÈëĞŞ¸ÄºóµÄÍ·²¿ĞÅÏ¢
+            byte[] fbyte = new byte[splitSizeInt + head.length];  //å­˜æ”¾æˆªå–çš„éŸ³é¢‘æ•°æ®
+            for (int i = 0; i < head.length; i++) {  //æ”¾å…¥ä¿®æ”¹åçš„å¤´éƒ¨ä¿¡æ¯
                 fbyte[i] = head[i];
             }
-            byte[] skipBytes = new byte[skipSizeInt];  //´æ·Å½ØÈ¡Ê±Ìø¹ıµÄÒôÆµÊı¾İ
-            fis.read(skipBytes, 0, skipBytes.length);  //Ìø¹ı²»ĞèÒª½ØÈ¡µÄÊı¾İ
-            fis.read(fbyte, head.length, fbyte.length - head.length);  //¶ÁÈ¡Òª½ØÈ¡µÄÊı¾İµ½Ä¿±êÊı×é
+            byte[] skipBytes = new byte[skipSizeInt];  //å­˜æ”¾æˆªå–æ—¶è·³è¿‡çš„éŸ³é¢‘æ•°æ®
+            fis.read(skipBytes, 0, skipBytes.length);  //è·³è¿‡ä¸éœ€è¦æˆªå–çš„æ•°æ®
+            fis.read(fbyte, head.length, fbyte.length - head.length);  //è¯»å–è¦æˆªå–çš„æ•°æ®åˆ°ç›®æ ‡æ•°ç»„
             fis.close();
 
             File target = new File(targetfile);
-            if (target.exists()) {  //Èç¹ûÄ¿±êÎÄ¼şÒÑ´æÔÚ£¬ÔòÉ¾³ıÄ¿±êÎÄ¼ş
+            if (target.exists()) {  //å¦‚æœç›®æ ‡æ–‡ä»¶å·²å­˜åœ¨ï¼Œåˆ™åˆ é™¤ç›®æ ‡æ–‡ä»¶
                 target.delete();
             }
             FileOutputStream fos = new FileOutputStream(target);
@@ -97,9 +97,9 @@ public class WavCutUtil {
     }
 
     /**
-     * »ñÈ¡ÒôÆµÎÄ¼ş×ÜÊ±³¤
+     * è·å–éŸ³é¢‘æ–‡ä»¶æ€»æ—¶é•¿
      *
-     * @param file ÎÄ¼şÂ·¾¶
+     * @param file æ–‡ä»¶è·¯å¾„
      * @return
      */
     public static long getTimeLen(File file) {
@@ -118,7 +118,7 @@ public class WavCutUtil {
     }
 
     /**
-     * Êı×é·´×ª
+     * æ•°ç»„åè½¬
      *
      * @param array
      */
@@ -134,7 +134,7 @@ public class WavCutUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println(cut("C:/Users/DX/Desktop/music/nihao.mp3", "C:/Users/DX/Desktop/music/newceshi.wav", 0, -100));
+        System.out.println(cut("C:/Users/DX/Desktop/music/qinghuaci.wav", "C:/Users/DX/Desktop/music/newceshi.wav", 0, -100));
         //System.out.println(cut("C:/Users/DX/Desktop/music/68.wav", "C:/Users/DX/Desktop/music/68.wav", 18,-100));
         /*System.out.println(cut("f:\\111.wav", "f:\\111-cut_20_28.wav", 20, 28));*/
     }

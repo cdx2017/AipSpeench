@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.service.FileService;
+import com.example.demo.service.RedisFileService;
 import com.example.demo.service.UploadFileService;
 import com.example.demo.service.WavCutService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +20,8 @@ public class AdressRouteController {
 
     @Autowired
     private UploadFileService uploadFileService;
-
     @Autowired
-    private FileService fileService;
+    private RedisFileService redisFileService;
     @Autowired
     private WavCutService wavCutService;
 
@@ -71,13 +70,16 @@ public class AdressRouteController {
                 File file1 = new File(path);
                 long t1 = wavCutService.getWavTimeLen(file1);  //总时长(秒)
                 /*小于60s的文件任意上传*/
+                redisFileService.saveFilePathToRedis("filepath", path);/*记录文件位置*/
                 if (t1 <= 60) {
-                    fileService.saveFilePathToRedis("filepath", path);/*记录文件位置*/
+                    redisFileService.saveFileTimeToRedis("time", t1);
                     return "/startChangeToText";
                 } else {/*大于60s的需要截取 目前只能截取wav格式的音频*/
                     if (name.contains(".wav")) {
-                        wavCutService.WavCut(path, "src/main/webapp/music/use." + Name[i], 0, 60);/*提前切割*/
-                        fileService.saveFileTimeToRedis("time", t1);
+                        String newpath = "src/main/webapp/music/use." + Name[i];
+                        wavCutService.WavCut(path, newpath, 0, 60);/*提前切割*/
+                        redisFileService.saveFilePathToRedis("newfilepath", newpath);/*记录文件位置*/
+                        redisFileService.saveFileTimeToRedis("time", t1);
                         return "/startChangeToText";
                     }
                 }

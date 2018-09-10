@@ -1,14 +1,14 @@
 package com.example.demo.controller;
 
+import com.example.demo.Entity.ChangeResultEntity;
 import com.example.demo.service.AudioTextService;
-
-import com.example.demo.service.FileService;
-import com.example.demo.service.UploadFileService;
+import com.example.demo.service.RedisFileService;
+import com.example.demo.service.WavCutService;
 import io.swagger.annotations.*;
+import net.sf.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 
 /**
@@ -22,7 +22,10 @@ public class AudioToTextController {
     private AudioTextService audioTextService;
 
     @Autowired
-    private FileService fileService;
+    private RedisFileService redisFileService;
+
+    @Autowired
+    private WavCutService wavCutService;
 
     /**
      * 音频转化为文字
@@ -38,9 +41,37 @@ public class AudioToTextController {
     })
     @PostMapping(value = "/AudioToText")
     @ResponseBody
-    public String AudioToText(String source, int rate) {
+    public Object AudioToText(String source, int rate) {
+        JSONArray jsonArray = new JSONArray();
         if ("myPath".equals(source)) {
-            return audioTextService.AdToTx(fileService.getFilePathFromRedis("filepath"), rate);
+            Long time = redisFileService.getFileTimeFromRedis("time");
+            String filepath = redisFileService.getFilePathFromRedis("filepath");
+
+            if (time > 60) {
+                String newfilepath = redisFileService.getFilePathFromRedis("newfilepath");
+                ChangeResultEntity changeResultEntity=audioTextService.AdToTx(newfilepath, rate);
+                if("3303".equals(changeResultEntity.getErr_no())){//wav音频采样率有问题，无法切割
+                    changeResultEntity.setResult("wav音频采样率有问题，无法切割!");
+                    return changeResultEntity;
+                }
+                jsonArray.add(changeResultEntity);
+                int i = 1;
+                for (Long t = time / 60; t > 0; t--, i++) {
+                    if (t >= 2) {
+                        wavCutService.WavCut(filepath, newfilepath, 60 * i, 60 * i + 60);
+                        jsonArray.add(audioTextService.AdToTx(redisFileService.getFilePathFromRedis("newfilepath"), rate));
+                    } else {
+                        wavCutService.WavCut(filepath, newfilepath, 60 * i);
+                        jsonArray.add(audioTextService.AdToTx(redisFileService.getFilePathFromRedis("newfilepath"), rate));
+                        break;
+                    }
+                }
+                //String resultArry[] = result.split("<>");
+
+                return jsonArray;
+            } else {
+                return audioTextService.AdToTx(filepath, rate);
+            }
         } else {
             return audioTextService.AdToTx(source, rate);
         }

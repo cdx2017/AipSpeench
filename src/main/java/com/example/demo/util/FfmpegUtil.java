@@ -37,13 +37,13 @@ public class FfmpegUtil {
         }
     }
 
-    /*public static void main(String[] args) {
-        String sPath = "blob:http://localhost:8998/6e501044-404f-4cbb-982c-c011b99700b8";
-        String tPath = "C:\\Users\\DX\\Desktop\\music\\8.pcm";
+    public static void main(String[] args) {
+        String sPath = "C:\\Users\\DX\\Desktop\\music/qinghuaci.mp3";
+        String tPath = "C:\\Users\\DX\\Desktop\\music\\qinghuaci.wav";
         try {
             new FfmpegUtil().changeAmrToMp3(sPath, tPath);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }*/
+    }
 }

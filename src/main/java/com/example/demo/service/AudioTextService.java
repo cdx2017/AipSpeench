@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.Entity.ChangeResultEntity;
 import com.example.demo.util.AudioConvertPcmUtil;
 import com.example.demo.util.FfmpegUtil;
 import com.example.demo.util.VoiceToTextUtil;
@@ -24,7 +25,7 @@ public class AudioTextService {
      * @param rate   比率
      * @return 转化文本
      */
-    public String AdToTx(String source, int rate) {
+    public ChangeResultEntity AdToTx(String source, int rate) {
         String target = "src/main/webapp/music/change.pcm";
         /*由于无法实现wav转pcm，这种方式舍弃*/
         /*if (source.contains(".pcm")) {
