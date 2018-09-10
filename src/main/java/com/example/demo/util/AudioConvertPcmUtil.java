@@ -119,9 +119,9 @@ public class AudioConvertPcmUtil {
 
 
     //============================================================================================测试
-   /* public void test() throws Exception {
-        String mp3filepath = "C:/Users/DX/Desktop/music/你好.mp3";*//*mp3文件地址*//*
-        String pcmfilepath = "C:/Users/DX/Desktop/music/你好.pcm";*//*pcm文件输出地址*//*
+  /*  public void test() throws Exception {
+        String mp3filepath = "C:/Users/DX/Desktop/music/7.mp3";
+        String pcmfilepath = "C:/Users/DX/Desktop/music/7.pcm";
         AudioConvertPcmUtil mp3ConvertPCM = new AudioConvertPcmUtil();
         mp3ConvertPCM.convertMP32Pcm(mp3filepath, pcmfilepath);
         VoiceToTextUtil voiceToText = new VoiceToTextUtil();
