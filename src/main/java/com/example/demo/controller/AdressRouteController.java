@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 
 
 /**
@@ -63,22 +62,23 @@ public class AdressRouteController {
         if (name.contains(".wav") || name.contains(".mp3") || name.contains(".pcm") || name.contains(".m4a") || name.contains(".mp4")) {
             String[] Name = name.split("\\.");
             int i = Name.length - 1;
-            String newName = "origin." + Name[i];
-            if (uploadFileService.uploadFile(file.getInputStream(), newName)) {
+            String newName = "origin." + Name[i];//原音频
+            String dirPath = "src/main/webapp/music/";//音频存放目录路径
 
-                String path = "src/main/webapp/music/" + newName;
-                File file1 = new File(path);
-                long t1 = wavCutService.getWavTimeLen(file1);  //总时长(秒)
-                /*小于60s的文件任意上传*/
+            if (uploadFileService.uploadFile(file.getInputStream(), newName, dirPath)) {
+                String path = "src/main/webapp/music/" + newName;//原音频路径
+                int t1 = wavCutService.getWavTimeLen(path);  //总时长(秒)
                 redisFileService.saveFilePathToRedis("filepath", path);/*记录文件位置*/
+                /*小于60s的文件任意上传*/
                 if (t1 <= 60) {
                     redisFileService.saveFileTimeToRedis("time", t1);
                     return "/startChangeToText";
                 } else {/*大于60s的需要截取 目前只能截取wav格式的音频*/
                     if (name.contains(".wav")) {
-                        String newpath = "src/main/webapp/music/use." + Name[i];
-                        wavCutService.WavCut(path, newpath, 0, 60);/*提前切割*/
-                        redisFileService.saveFilePathToRedis("newfilepath", newpath);/*记录文件位置*/
+                        String newpath = "src/main/webapp/music/new." + Name[i];//被裁剪的音频路径
+                        String cutpath = "src/main/webapp/music/use." + Name[i];//使用的识别音频路径
+                        redisFileService.saveFilePathToRedis("newpath", newpath);
+                        redisFileService.saveFilePathToRedis("cutpath", cutpath);
                         redisFileService.saveFileTimeToRedis("time", t1);
                         return "/startChangeToText";
                     }

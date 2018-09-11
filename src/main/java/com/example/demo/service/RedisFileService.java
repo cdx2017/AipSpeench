@@ -29,7 +29,7 @@ public class RedisFileService {
         valueOperations.set(nameKey, nameValue, 10, TimeUnit.MINUTES);
     }
 
-    public void saveFileTimeToRedis(String nameKey, Long nameValue) {
+    public void saveFileTimeToRedis(String nameKey, int nameValue) {
         ValueOperations valueOperations = redisTemplate.opsForValue();
         valueOperations.set(nameKey, nameValue, 10, TimeUnit.MINUTES);
     }
@@ -40,12 +40,13 @@ public class RedisFileService {
      */
     public String getFilePathFromRedis(String nameKey) {
         ValueOperations valueOperations = redisTemplate.opsForValue();
-        String verifyName = (String) valueOperations.get(nameKey);
-        return verifyName;
+        String filePath = (String) valueOperations.get(nameKey);
+        return filePath;
     }
-    public Long getFileTimeFromRedis(String nameKey) {
+
+    public int getFileTimeFromRedis(String nameKey) {
         ValueOperations valueOperations = redisTemplate.opsForValue();
-        Long verifyName = (Long) valueOperations.get(nameKey);
-        return verifyName;
+        int time = (int)valueOperations.get(nameKey);
+        return time;
     }
 }

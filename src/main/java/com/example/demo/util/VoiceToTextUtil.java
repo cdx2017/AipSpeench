@@ -52,7 +52,7 @@ public class VoiceToTextUtil {
         return changeResultEntity;
     }
 
-    public static void main(String[] args) {
-        System.out.println(VoiceToTextUtil.PcmToString("C:/Users/DX/Desktop/music/use.wav", 16000).toString());
-    }
+   /* public static void main(String[] args) {
+        System.out.println(VoiceToTextUtil.PcmToString("C:/Users/DX/Desktop/music/7.pcm", 16000).toString());
+    }*/
 }

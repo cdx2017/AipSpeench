@@ -1,14 +1,13 @@
 package com.example.demo.util;
 
-import it.sauronsoftware.jave.Encoder;
-import it.sauronsoftware.jave.MultimediaInfo;
 import org.springframework.stereotype.Component;
 
+/*import it.sauronsoftware.jave.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
+import java.nio.ByteBuffer;*/
 /**
  * Created by DX on 2018/9/7.
  */
@@ -16,6 +15,7 @@ import java.nio.ByteBuffer;
 /**
  * wav音频文件截取工具
  * （适用于比特率为128kbps的wav音频文件，此类音频文件的头部信息占用长度44字节）
+ * 音频视频格式互相转化
  *
  * @author cdx
  */
@@ -32,7 +32,7 @@ public class WavCutUtil {
      *                   <p>
      *                   return  截取成功返回true，否则返回false
      */
-    public static boolean cut(String sourcefile, String targetfile, int start, int end) {
+    /*public static boolean cut(String sourcefile, String targetfile, int start, int end) {
         try {
             if (!sourcefile.toLowerCase().endsWith(".wav") || !targetfile.toLowerCase().endsWith(".wav")) {
                 return false;
@@ -94,7 +94,7 @@ public class WavCutUtil {
             return false;
         }
         return true;
-    }
+    }*/
 
     /**
      * 获取音频文件总时长
@@ -102,7 +102,7 @@ public class WavCutUtil {
      * @param file 文件路径
      * @return
      */
-    public static long getTimeLen(File file) {
+    /*public static long getTimeLen(File file) {
         long tlen = 0;
         if (file != null && file.exists()) {
             Encoder encoder = new Encoder();
@@ -115,14 +115,14 @@ public class WavCutUtil {
             }
         }
         return tlen;
-    }
+    }*/
 
     /**
      * 数组反转
      *
      * @param array
      */
-    public static byte[] reverse(byte[] array) {
+    /*public static byte[] reverse(byte[] array) {
         byte temp;
         int len = array.length;
         for (int i = 0; i < len / 2; i++) {
@@ -131,12 +131,52 @@ public class WavCutUtil {
             array[len - 1 - i] = temp;
         }
         return array;
-    }
+    }*/
 
-    public static void main(String[] args) {
-        System.out.println(cut("C:/Users/DX/Desktop/music/qinghuaci.wav", "C:/Users/DX/Desktop/music/newceshi.wav", 0, -100));
+    /**
+     * 视频格式转换
+     * @param src
+     * @param target
+     * @return
+     */
+   /* static boolean convertAmr2MP3(File source, File target) {
+
+        File source = new File("C:/Users/DX/Desktop/music/68.wav");
+        File target = new File("C:/Users/DX/Desktop/music/68.mp3");
+        //convertAmr2MP3(source,target);
+        AudioAttributes audio = new AudioAttributes();
+        audio.setCodec("libmp3lame");
+        audio.setBitRate(new Integer(64000));
+        audio.setChannels(new Integer(1));
+        audio.setSamplingRate(new Integer(22050));
+
+        VideoAttributes video = new VideoAttributes();
+        video.setCodec("mp4");
+        video.setBitRate(new Integer(16000));
+        video.setFrameRate(new Integer(15));
+        video.setSize(new VideoSize(400, 300));
+        EncodingAttributes attrs = new EncodingAttributes();
+        attrs.setFormat("mp3");
+        attrs.setAudioAttributes(audio);
+        //attrs.setVideoAttributes(video);
+        Encoder encoder = new Encoder();
+
+        try {
+            encoder.encode(src, target, attrs);
+            return true;
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (InputFormatException e) {
+            e.printStackTrace();
+        } catch (EncoderException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }*/
+
+   /* public static void main(String[] args) {
+        System.out.println(cut("C:/Users/DX/Desktop/music/jingweishengming.wav", "C:/Users/DX/Desktop/music/newceshi.wav", 61, 120));
         //System.out.println(cut("C:/Users/DX/Desktop/music/68.wav", "C:/Users/DX/Desktop/music/68.wav", 18,-100));
-        /*System.out.println(cut("f:\\111.wav", "f:\\111-cut_20_28.wav", 20, 28));*/
-    }
+    }*/
 
 }

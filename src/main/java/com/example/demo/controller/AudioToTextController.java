@@ -28,53 +28,61 @@ public class AudioToTextController {
     private WavCutService wavCutService;
 
     /**
-     * ��Ƶת��Ϊ����
+     * 音频转化为文字
      *
      * @param source
      * @param rate
-     * @return ����ʶ����
+     * @return 返回识别结果
      */
-    @ApiOperation(value = "����ʶ��", notes = "����ʶ��")
+    @ApiOperation(value = "语音识别", notes = "语音识别")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "source", value = "��Ƶ��Դ��ַ", required = true, dataType = "String", paramType = "query", defaultValue = "src/main/webapp/music/"),
-            @ApiImplicitParam(name = "rate", value = "��Ƶת������", required = true, dataType = "int", paramType = "query", defaultValue = "16000")
+            @ApiImplicitParam(name = "source", value = "音频来源地址", required = true, dataType = "String", paramType = "query", defaultValue = "src/main/webapp/music/"),
+            @ApiImplicitParam(name = "rate", value = "音频转化比率", required = true, dataType = "int", paramType = "query", defaultValue = "16000")
     })
     @PostMapping(value = "/AudioToText")
     @ResponseBody
     public Object AudioToText(String source, int rate) {
+        ChangeResultEntity errorCutResultEntity = new ChangeResultEntity("切割失败", "音频切割发生错误", "500", "null", "null");
         JSONArray jsonArray = new JSONArray();
         if ("myPath".equals(source)) {
-            Long time = redisFileService.getFileTimeFromRedis("time");
+            int time = redisFileService.getFileTimeFromRedis("time");
             String filepath = redisFileService.getFilePathFromRedis("filepath");
 
             if (time > 60) {
-                String newfilepath = redisFileService.getFilePathFromRedis("newfilepath");
-                ChangeResultEntity changeResultEntity=audioTextService.AdToTx(newfilepath, rate);
-                if("3303".equals(changeResultEntity.getErr_no())){//wav��Ƶ�����������⣬�޷��и�
-                    changeResultEntity.setResult("wav��Ƶ�����������⣬�޷��и�!");
+                String newpath = redisFileService.getFilePathFromRedis("newpath");
+                wavCutService.WavCutIgnoreEnd(filepath, newpath, "0");//备份上传的音频用来切割
+                String cutpath = redisFileService.getFilePathFromRedis("cutpath");
+               /* ChangeResultEntity changeResultEntity = audioTextService.AdToTx(cutpath, rate);
+                if ("3303".equals(changeResultEntity.getErr_no())) {//wav音频采样率有问题，无法切割
+                    changeResultEntity.setResult("wav音频采样率有问题，无法切割!");
                     return changeResultEntity;
                 }
-                jsonArray.add(changeResultEntity);
+                jsonArray.add(changeResultEntity);*/
                 int i = 1;
-                for (Long t = time / 60; t > 0; t--, i++) {
+                for (int t = time / 60 + 1; t > 0; t--, i++) {
                     if (t >= 2) {
-                        wavCutService.WavCut(filepath, newfilepath, 60 * i, 60 * i + 60);
-                        jsonArray.add(audioTextService.AdToTx(redisFileService.getFilePathFromRedis("newfilepath"), rate));
+                        wavCutService.WavCutIgnoreStart(newpath, cutpath, "60");//分割出要识别的部分
+                        wavCutService.WavCutIgnoreEnd(newpath, newpath, "60");//将原音频用剩下部分音频覆盖
+                        System.out.println("第" + i + "分钟：");//第i+1分钟识别
+                        jsonArray.add(audioTextService.AdToTx(cutpath, rate));
                     } else {
-                        wavCutService.WavCut(filepath, newfilepath, 60 * i);
-                        jsonArray.add(audioTextService.AdToTx(redisFileService.getFilePathFromRedis("newfilepath"), rate));
-                        break;
+                        System.out.println("最后1分钟：");//最后一分钟识别
+                        jsonArray.add(audioTextService.AdToTx(newpath, rate));
                     }
                 }
-                //String resultArry[] = result.split("<>");
-
-                return jsonArray;
             } else {
-                return audioTextService.AdToTx(filepath, rate);
+                System.out.println("开始识别：");//一分钟内识别
+                jsonArray.add(audioTextService.AdToTx(filepath, rate));
             }
+            System.out.println("识别完成！");
+            return jsonArray;
         } else {
-            return audioTextService.AdToTx(source, rate);
+            System.out.println("开始识别：");//一分钟内识别
+            jsonArray.add(audioTextService.AdToTx(source, rate));
+            System.out.println("识别完成！");
+            return jsonArray;
         }
+
     }
 
 }

@@ -1,4 +1,5 @@
 package com.example.demo.service;
+
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -10,11 +11,16 @@ import java.io.*;
 public class UploadFileService {
     private static Boolean flag = false;
 
-    public Boolean uploadFile(InputStream inputStream, String fileName) {
+    /**
+     * @param inputStream 输入流
+     * @param fileName 文件名
+     * @param dirPath 文件存放的目录 "src/main/webapp/music/";
+     * @return
+     */
+    public Boolean uploadFile(InputStream inputStream, String fileName, String dirPath) {
 
         OutputStream os = null;
         try {
-            String path = "src/main/webapp/music/";
             // 2、保存到临时文件
             // 1K的数据缓冲
             byte[] bs = new byte[1024];
@@ -22,7 +28,7 @@ public class UploadFileService {
             int len;
             // 输出的文件流保存到本地文件
 
-            File tempFile = new File(path);
+            File tempFile = new File(dirPath);
             if (!tempFile.exists()) {
                 tempFile.mkdirs();
             }
