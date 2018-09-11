@@ -74,14 +74,14 @@ public class AdressRouteController {
                     redisFileService.saveFileTimeToRedis("time", t1);
                     return "/startChangeToText";
                 } else {/*大于60s的需要截取 目前只能截取wav格式的音频*/
-                    if (name.contains(".wav")) {
+                    //if (name.contains(".wav")) {
                         String newpath = "src/main/webapp/music/new." + Name[i];//被裁剪的音频路径
                         String cutpath = "src/main/webapp/music/use." + Name[i];//使用的识别音频路径
                         redisFileService.saveFilePathToRedis("newpath", newpath);
                         redisFileService.saveFilePathToRedis("cutpath", cutpath);
                         redisFileService.saveFileTimeToRedis("time", t1);
                         return "/startChangeToText";
-                    }
+                    //}
                 }
             }
         }

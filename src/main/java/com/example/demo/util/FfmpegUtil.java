@@ -110,9 +110,14 @@ public class FfmpegUtil {
             br.close();
 
             //从视频信息中解析时长
-            String regexDuration = "Duration: (.*?), bitrate: (\\d*) kb\\/s";
+            String regexDuration;
+            if (video_path.contains(".wav"))
+                regexDuration = "Duration: (.*?), bitrate: (\\d*) kb\\/s";
+            else
+                regexDuration = "Duration: (.*?), start: (.*?), bitrate: (\\d*) kb\\/s";
             Pattern pattern = Pattern.compile(regexDuration);
             Matcher m = pattern.matcher(sb.toString());
+            System.out.println(sb.toString());
             if (m.find()) {
                 int time = getTimelen(m.group(1));
                 return time;
@@ -146,19 +151,20 @@ public class FfmpegUtil {
     }
 
 
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         String path = "C:\\Users\\DX\\Desktop\\music\\jingweishengming.wav";
         String sPath = "C:\\Users\\DX\\Desktop\\music/use.wav";
         String tPath = "C:\\Users\\DX\\Desktop\\music\\use1.wav";
-        String pcmPath = "C:\\Users\\DX\\Desktop\\music\\use1.pcm";
+        String pcmPath = "C:\\Users\\DX\\Desktop\\music\\q.mp3";
 
         try {
-            new FfmpegUtil().changeAudioToPcm(tPath, pcmPath);
-            new FfmpegUtil().CutAudio(path, tPath, "0", "60");
-            new FfmpegUtil().CutAudio(sPath, sPath, "60", "200");
+            //new FfmpegUtil().changeAudioToPcm(tPath, pcmPath);
+            //new FfmpegUtil().CutAudio(path, sPath, "0", "200");
+            //new FfmpegUtil().CutAudio(sPath, tPath, "60", "200");
+            //new FfmpegUtil().CutAudio(tPath, sPath, "0", "200");
             System.out.println(new FfmpegUtil().getAudioTime(pcmPath));
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }*/
+    }
 }

@@ -49,6 +49,7 @@ public class AudioToTextController {
             String filepath = redisFileService.getFilePathFromRedis("filepath");
 
             if (time > 60) {
+               // String middlePath=""
                 String newpath = redisFileService.getFilePathFromRedis("newpath");
                 wavCutService.WavCutIgnoreEnd(filepath, newpath, "0");//备份上传的音频用来切割
                 String cutpath = redisFileService.getFilePathFromRedis("cutpath");
@@ -62,9 +63,11 @@ public class AudioToTextController {
                 for (int t = time / 60 + 1; t > 0; t--, i++) {
                     if (t >= 2) {
                         wavCutService.WavCutIgnoreStart(newpath, cutpath, "60");//分割出要识别的部分
-                        wavCutService.WavCutIgnoreEnd(newpath, newpath, "60");//将原音频用剩下部分音频覆盖
                         System.out.println("第" + i + "分钟：");//第i+1分钟识别
                         jsonArray.add(audioTextService.AdToTx(cutpath, rate));
+                        wavCutService.WavCutIgnoreEnd(newpath, cutpath, "60");//分割出剩下的音频
+                        wavCutService.WavCutIgnoreEnd(cutpath, newpath, "0");//将原音频用剩下部分音频覆盖
+
                     } else {
                         System.out.println("最后1分钟：");//最后一分钟识别
                         jsonArray.add(audioTextService.AdToTx(newpath, rate));
