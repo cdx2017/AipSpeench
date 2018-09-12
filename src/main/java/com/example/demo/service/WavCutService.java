@@ -9,8 +9,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class WavCutService {
+
     @Autowired
-    FfmpegUtil ffmpegUtil;
+    private RedisFileService redisFileService;
 
     /**
      * @param sourcePath 源路径
@@ -18,7 +19,7 @@ public class WavCutService {
      * @param end        结束截取时间
      */
     public void WavCutIgnoreStart(String sourcePath, String targetPath, String end) {
-        ffmpegUtil.CutAudio(sourcePath, targetPath, "0", end);
+        FfmpegUtil.CutAudio(sourcePath, targetPath, "0", end, redisFileService.getFilePathFromRedis("ffmpegPath"));
     }
 
     /**
@@ -27,7 +28,7 @@ public class WavCutService {
      * @param start      开始截取时间 默认结束截取时间为最后一秒
      */
     public void WavCutIgnoreEnd(String sourcePath, String targetPath, String start) {
-        ffmpegUtil.CutAudio(sourcePath, targetPath, start, "36000");
+        FfmpegUtil.CutAudio(sourcePath, targetPath, start, "36000",redisFileService.getFilePathFromRedis("ffmpegPath"));
     }
 
     /**
@@ -35,6 +36,6 @@ public class WavCutService {
      * @return 文件时长 单位秒
      */
     public int getWavTimeLen(String path) {
-        return ffmpegUtil.getAudioTime(path);
+        return FfmpegUtil.getAudioTime(path,redisFileService.getFilePathFromRedis("ffmpegPath"));
     }
 }

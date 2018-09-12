@@ -13,32 +13,28 @@ import org.springframework.stereotype.Service;
 public class AudioTextService {
 
     @Autowired
-    FfmpegUtil ffmpegUtil;
-    @Autowired
-    VoiceToTextUtil voiceToTextUtil;
+    private RedisFileService redisFileService;
 
     /**
      * @param source 文件来源地址
      * @param rate   比率
      * @return 转化文本
      */
-    public ChangeResultEntity AdToTx(String source, int rate) {
-        String target = "src/main/webapp/music/change.pcm";
-
+    public ChangeResultEntity AdToTx(String source, int rate, String target) {
         if (source.contains(".pcm")) {
             target = source;
-            return voiceToTextUtil.PcmToString(target, rate);
+            return VoiceToTextUtil.PcmToString(target, rate);
         } else {
-            ffmpegUtil.changeAudioToPcm(source, target);
-            return voiceToTextUtil.PcmToString(target, rate);
+            FfmpegUtil.changeAudioToPcm(source, target, redisFileService.getFilePathFromRedis("ffmpegPath"));
+            return VoiceToTextUtil.PcmToString(target, rate);
         }
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         int rate = 16000;//比率
         String filepath = "C:/Users/DX/Desktop/music/use1.pcm";//mp3文件地址
         AudioTextService audioTextService = new AudioTextService();
-        System.out.println(audioTextService.AdToTx(filepath, rate));
-    }
+        System.out.println(audioTextService.AdToTx(filepath, rate,""));
+    }*/
 
 }

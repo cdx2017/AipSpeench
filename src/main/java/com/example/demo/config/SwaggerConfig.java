@@ -16,9 +16,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 *
  * SwaggerConfig
  * <p>
- * SpringBootÄ¬ÈÏÒÑ¾­½«classpath:/META-INF/resources/ºÍclasspath:/META-INF/resources/webjars/Ó³Éä
- * ËùÒÔ¸Ã·½·¨²»ÐèÒªÖØÐ´£¬Èç¹ûÔÚSpringMVCÖÐ£¬¿ÉÄÜÐèÒªÖØÐ´¶¨Òå£¨ÎÒÃ»ÓÐ³¢ÊÔ£©
- * ÖØÐ´¸Ã·½·¨ÐèÒª extends WebMvcConfigurerAdapter
+ * SpringBootÄ¬ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½classpath:/META-INF/resources/ï¿½ï¿½classpath:/META-INF/resources/webjars/Ó³ï¿½ï¿½
+ * ï¿½ï¿½ï¿½Ô¸Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½SpringMVCï¿½Ð£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½Ð´ï¿½ï¿½ï¿½å£¨ï¿½ï¿½Ã»ï¿½Ð³ï¿½ï¿½Ô£ï¿½
+ * ï¿½ï¿½Ð´ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½Òª extends WebMvcConfigurerAdapter
  * <p>
  * ")
  * //                .addResourceLocations("classpath:/META-INF/resources/webjars/");
@@ -41,17 +41,14 @@ public class SwaggerConfig {
                 Class<?> declaringClass = input.declaringClass();
                 if (declaringClass == BasicErrorController.class) {
                     return false;
-                }// ÅÅ³ý
+                }// ï¿½Å³ï¿½
 
                 if (declaringClass.isAnnotationPresent(RestController.class)) {
                     return true;
-                } // ±»×¢½âµÄÀà
+                } // ï¿½ï¿½×¢ï¿½ï¿½ï¿½ï¿½ï¿½
 
-                if (input.isAnnotatedWith(ResponseBody.class)) {
-                    return true;
-                } // ±»×¢½âµÄ·½·¨
+                return input.isAnnotatedWith(ResponseBody.class);
 
-                return false;
             }
         };
         return new Docket(DocumentationType.SWAGGER_2)
@@ -64,9 +61,9 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                //´ó±êÌâ
-                .title("ÓïÒôÊ¶±ð½Ó¿Úapi")
-                        //°æ±¾
+                //ï¿½ï¿½ï¿½ï¿½ï¿½
+                .title("ï¿½ï¿½ï¿½ï¿½Ê¶ï¿½ï¿½Ó¿ï¿½api")
+                        //ï¿½æ±¾
                 .version("1.0")
                 .build();
     }

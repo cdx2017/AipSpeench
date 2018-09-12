@@ -39,20 +39,23 @@ public class VoiceToTextUtil {
 
         // 调用接口
         JSONObject res = client.asr(PcmPath, "pcm", PcmRate, null);
-        String result,corpus_no;
+        System.out.println(res.toString());
+        String result, err_msg, err_no;
         if ("0".equals(res.get("err_no").toString())) {
             result = res.get("result").toString();
-            corpus_no=res.get("corpus_no").toString();
+            err_no = res.get("err_no").toString();
+            err_msg = res.get("err_msg").toString();
         } else {
             result = "null";
-            corpus_no="null";
+            err_no = res.get("err_no").toString();
+            err_msg = res.get("err_msg").toString();
         }
-        ChangeResultEntity changeResultEntity = new ChangeResultEntity(result, res.get("err_msg").toString(),
-                res.get("err_no").toString(), res.get("sn").toString(), corpus_no);
+        ChangeResultEntity changeResultEntity =
+                new ChangeResultEntity(result, err_msg, err_no);
         return changeResultEntity;
     }
 
-   /* public static void main(String[] args) {
-        System.out.println(VoiceToTextUtil.PcmToString("C:/Users/DX/Desktop/music/7.pcm", 16000).toString());
+    /*public static void main(String[] args) {
+        System.out.println(VoiceToTextUtil.PcmToString("C:/Users/DX/Desktop/music/16k.pcm", 16000).toString());
     }*/
 }

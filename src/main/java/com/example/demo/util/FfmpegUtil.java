@@ -21,9 +21,9 @@ public class FfmpegUtil {
      *
      * @param sourcePath 输入音频
      * @param targetPath 输出位置
+     * @param webroot    ffmpeg bin 目录
      */
-    public static void changeAudioToPcm(String sourcePath, String targetPath) {
-        String webroot = "src/main/webapp/ffmpeg/bin";
+    public static void changeAudioToPcm(String sourcePath, String targetPath, String webroot) {
         Runtime run = null;
         try {
             run = Runtime.getRuntime();
@@ -40,7 +40,7 @@ public class FfmpegUtil {
             p.getErrorStream().close();
             p.waitFor();
             long end = System.currentTimeMillis();
-            System.out.println(sourcePath + " convert success, costs:" + (end - start) + "ms");
+            System.out.println(sourcePath + "AudioChange convert success, costs:" + (end - start) + "ms");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -56,9 +56,9 @@ public class FfmpegUtil {
      * @param targetPath 输出位置
      * @param startTime  开始时间
      * @param endTime    结束时间
+     * @param webroot    ffmpeg bin 目录
      */
-    public static void CutAudio(String sourcePath, String targetPath, String startTime, String endTime) {
-        String webroot = "src/main/webapp/ffmpeg/bin";
+    public static void CutAudio(String sourcePath, String targetPath, String startTime, String endTime, String webroot) {
         Runtime run = null;
         try {
             run = Runtime.getRuntime();
@@ -73,7 +73,7 @@ public class FfmpegUtil {
             p.getErrorStream().close();
             p.waitFor();
             long end = System.currentTimeMillis();
-            System.out.println(sourcePath + " convert success, costs:" + (end - start) + "ms");
+            System.out.println(sourcePath + "AudioCut convert success, costs:" + (end - start) + "ms");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -86,11 +86,12 @@ public class FfmpegUtil {
     /**
      * 获取视频总时间
      *
-     * @param video_path 视频路径
+     * @param video_path    视频路径
+     * @param ffmpegbinPath ffmpeg bin 目录
      * @return
      */
-    public static int getAudioTime(String video_path) {
-        String ffmpeg_path = "src/main/webapp/ffmpeg/bin/ffmpeg";
+    public static int getAudioTime(String video_path, String ffmpegbinPath) {
+        String ffmpeg_path = ffmpegbinPath + "/ffmpeg";
         List<String> commands = new java.util.ArrayList<String>();
         commands.add(ffmpeg_path);
         commands.add("-i");
@@ -108,16 +109,20 @@ public class FfmpegUtil {
                 sb.append(line);
             }
             br.close();
-
+            String result = sb.toString();
             //从视频信息中解析时长
             String regexDuration;
-            if (video_path.contains(".wav"))
+            if (result.contains("Invalid data")) {
+                System.out.println(result);
+                return 0;
+            }
+            if (!sb.toString().contains("start:")) {
                 regexDuration = "Duration: (.*?), bitrate: (\\d*) kb\\/s";
-            else
+            } else {
                 regexDuration = "Duration: (.*?), start: (.*?), bitrate: (\\d*) kb\\/s";
+            }
             Pattern pattern = Pattern.compile(regexDuration);
             Matcher m = pattern.matcher(sb.toString());
-            System.out.println(sb.toString());
             if (m.find()) {
                 int time = getTimelen(m.group(1));
                 return time;
@@ -151,7 +156,7 @@ public class FfmpegUtil {
     }
 
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         String path = "C:\\Users\\DX\\Desktop\\music\\jingweishengming.wav";
         String sPath = "C:\\Users\\DX\\Desktop\\music/use.wav";
         String tPath = "C:\\Users\\DX\\Desktop\\music\\use1.wav";
@@ -166,5 +171,5 @@ public class FfmpegUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }

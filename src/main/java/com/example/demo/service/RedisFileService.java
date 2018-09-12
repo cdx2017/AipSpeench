@@ -26,12 +26,12 @@ public class RedisFileService {
      */
     public void saveFilePathToRedis(String nameKey, String nameValue) {
         ValueOperations valueOperations = redisTemplate.opsForValue();
-        valueOperations.set(nameKey, nameValue, 10, TimeUnit.MINUTES);
+        valueOperations.set(nameKey, nameValue, 100, TimeUnit.MINUTES);
     }
 
     public void saveFileTimeToRedis(String nameKey, int nameValue) {
         ValueOperations valueOperations = redisTemplate.opsForValue();
-        valueOperations.set(nameKey, nameValue, 10, TimeUnit.MINUTES);
+        valueOperations.set(nameKey, nameValue, 100, TimeUnit.MINUTES);
     }
 
     /**
