@@ -3,7 +3,6 @@ package com.example.demo.util;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -19,67 +18,90 @@ public class FfmpegUtil {
     /**
      * 将音频文件转化为 pcm格式
      *
-     * @param sourcePath 输入音频
-     * @param targetPath 输出位置
-     * @param webroot    ffmpeg bin 目录
+     * @param sourcePath    输入音频
+     * @param targetPath    输出位置
+     * @param ffmpegbinPath ffmpeg bin 目录
      */
-    public static void changeAudioToPcm(String sourcePath, String targetPath, String webroot) {
-        Runtime run = null;
+    public static void changeAudioToPcm(String sourcePath, String targetPath, String ffmpegbinPath) {
+        //执行ffmpeg.exe,前面是ffmpeg.exe的地址，中间是需要转换的文件地址，后面是转换后的文件地址。-i是转换方式，意思是可编码解码，mp3编码方式采用的是libmp3lame
+        //wav转pcm
+        //Process p = run.exec(new File(webroot).getAbsolutePath() + "/ffmpeg -y -i " + sourcePath + " -acodec pcm_s16le -f s16le -ac 1 -ar 16000 " + targetPath);
+        //mp3转pcm
+        //Process p = run.exec(new File(webroot).getAbsolutePath() + "/ffmpeg -y -i " + sourcePath + " -acodec pcm_s16le -f s16le -ac 1 -ar 16000 " + targetPath);
+        Runtime runtime = Runtime.getRuntime();
+        List<String> commands = new java.util.ArrayList<String>();
+        commands.add(ffmpegbinPath);
+        commands.add("-y");
+        commands.add("-i");
+        commands.add(sourcePath);
+        commands.add("-acodec");
+        commands.add("pcm_s16le");
+        commands.add("-f");
+        commands.add("s16le");
+        commands.add("-ac");
+        commands.add("1");
+        commands.add("-ar");
+        commands.add("16000");
+        commands.add(targetPath);
+        StringBuffer test = new StringBuffer();
+        for (int i = 0; i < commands.size(); i++)
+            test.append(commands.get(i) + " ");
+        System.out.println(test);
+        ProcessBuilder builder = new ProcessBuilder();
+        builder.command(commands);
         try {
-            run = Runtime.getRuntime();
-            long start = System.currentTimeMillis();
-            System.out.println(new File(webroot).getAbsolutePath());
-            //执行ffmpeg.exe,前面是ffmpeg.exe的地址，中间是需要转换的文件地址，后面是转换后的文件地址。-i是转换方式，意思是可编码解码，mp3编码方式采用的是libmp3lame
-            //wav转pcm
-            Process p = run.exec(new File(webroot).getAbsolutePath() + "/ffmpeg -y -i " + sourcePath + " -acodec pcm_s16le -f s16le -ac 1 -ar 16000 " + targetPath);
-            //mp3转pcm
-            //Process p = run.exec(new File(webroot).getAbsolutePath() + "/ffmpeg -y -i " + sourcePath + " -acodec pcm_s16le -f s16le -ac 1 -ar 16000 " + targetPath);
-            //释放进程
-            p.getOutputStream().close();
-            p.getInputStream().close();
-            p.getErrorStream().close();
-            p.waitFor();
-            long end = System.currentTimeMillis();
-            System.out.println(sourcePath + "AudioChange convert success, costs:" + (end - start) + "ms");
+            builder.redirectErrorStream(true);
+            builder.start();
+            System.out.println("change to pcm success");
         } catch (Exception e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
-        } finally {
-            //run调用lame解码器最后释放内存
-            run.freeMemory();
+        }finally {
+            runtime.freeMemory();
         }
     }
 
     /**
      * 将音频切割 从测试来看切割结果如下：0--t;或者t--end
      *
-     * @param sourcePath 音频来源
-     * @param targetPath 输出位置
-     * @param startTime  开始时间
-     * @param endTime    结束时间
-     * @param webroot    ffmpeg bin 目录
+     * @param sourcePath    音频来源
+     * @param targetPath    输出位置
+     * @param startTime     开始时间
+     * @param endTime       结束时间
+     * @param ffmpegbinPath ffmpeg bin 目录
      */
-    public static void CutAudio(String sourcePath, String targetPath, String startTime, String endTime, String webroot) {
-        Runtime run = null;
-        try {
-            run = Runtime.getRuntime();
-            long start = System.currentTimeMillis();
-            System.out.println(new File(webroot).getAbsolutePath());
-           /*执行ffmpeg.exe,前面是ffmpeg.exe的地址，中间是需要转换的文件地址，后面是转换后的文件地址。-i是转换方式，意思是可编码解码，
+    public static void CutAudio(String sourcePath, String targetPath, String startTime, String endTime, String ffmpegbinPath) {
+        /*执行ffmpeg.exe,前面是ffmpeg.exe的地址，中间是需要转换的文件地址，后面是转换后的文件地址。-i是转换方式，意思是可编码解码，
            -acodec copy output.mp3 重新编码并复制到新文件中 -ss 开始截取的时间点 ,-t 截取音频时间长度*/
-            Process p = run.exec(new File(webroot).getAbsolutePath() + "/ffmpeg -y -i " + sourcePath + " -vn -acodec copy -ss " + startTime + " -t " + endTime + " " + targetPath);
-            //释放进程
-            p.getOutputStream().close();
-            p.getInputStream().close();
-            p.getErrorStream().close();
-            p.waitFor();
-            long end = System.currentTimeMillis();
-            System.out.println(sourcePath + "AudioCut convert success, costs:" + (end - start) + "ms");
+        //Process p = run.exec(new File(webroot).getAbsolutePath() + "/ffmpeg -y -i " + sourcePath + " -vn -acodec copy -ss " + startTime + " -t " + endTime + " " + targetPath);
+        List<String> commands = new java.util.ArrayList<String>();
+        commands.add(ffmpegbinPath);
+        commands.add("-y");
+        commands.add("-i");
+        commands.add(sourcePath);
+        commands.add("-vn");
+        commands.add("-acodec");
+        commands.add("copy");
+        commands.add("-ss");
+        commands.add(startTime);
+        commands.add("-t");
+        commands.add(endTime);
+        commands.add(targetPath);
+        StringBuffer test = new StringBuffer();
+        for (int i = 0; i < commands.size(); i++)
+            test.append(commands.get(i) + " ");
+        System.out.println(test);
+        try {
+            ProcessBuilder builder = new ProcessBuilder();
+            builder.command(commands);
+            builder.redirectErrorStream(true);
+            builder.start();
+            System.out.println("audio cut success");
         } catch (Exception e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
-        } finally {
-            //run调用lame解码器最后释放内存
-            run.freeMemory();
         }
+
     }
 
 
@@ -91,9 +113,8 @@ public class FfmpegUtil {
      * @return
      */
     public static int getAudioTime(String video_path, String ffmpegbinPath) {
-        String ffmpeg_path = ffmpegbinPath + "/ffmpeg";
         List<String> commands = new java.util.ArrayList<String>();
-        commands.add(ffmpeg_path);
+        commands.add(ffmpegbinPath);
         commands.add("-i");
         commands.add(video_path);
         try {
@@ -158,16 +179,16 @@ public class FfmpegUtil {
 
     /*public static void main(String[] args) {
         String path = "C:\\Users\\DX\\Desktop\\music\\jingweishengming.wav";
-        String sPath = "C:\\Users\\DX\\Desktop\\music/use.wav";
+        String sPath = "C:\\Users\\DX\\Desktop\\music\\use.wav";
         String tPath = "C:\\Users\\DX\\Desktop\\music\\use1.wav";
-        String pcmPath = "C:\\Users\\DX\\Desktop\\music\\q.mp3";
+        String pcmPath = "C:\\Users\\DX\\Desktop\\music\\q.pcm";
 
         try {
-            //new FfmpegUtil().changeAudioToPcm(tPath, pcmPath);
-            //new FfmpegUtil().CutAudio(path, sPath, "0", "200");
+            //new FfmpegUtil().changeAudioToPcm(tPath, pcmPath, "ffmpeg/bin/ffmpeg");
+            new FfmpegUtil().CutAudio(path, sPath, "60", "200", "ffmpeg/bin/ffmpeg");
             //new FfmpegUtil().CutAudio(sPath, tPath, "60", "200");
             //new FfmpegUtil().CutAudio(tPath, sPath, "0", "200");
-            System.out.println(new FfmpegUtil().getAudioTime(pcmPath));
+            //System.out.println(new FfmpegUtil().getAudioTime(pcmPath));
         } catch (Exception e) {
             e.printStackTrace();
         }
