@@ -47,16 +47,17 @@ public class FfmpegUtil {
         for (int i = 0; i < commands.size(); i++)
             test.append(commands.get(i) + " ");
         System.out.println(test);
-        ProcessBuilder builder = new ProcessBuilder();
-        builder.command(commands);
         try {
-            builder.redirectErrorStream(true);
-            builder.start();
+            ProcessBuilder builder = new ProcessBuilder();
+            builder.command(commands);
+            Process process = builder.start();
+            /**等待线程结束*/
+            process.waitFor();
             System.out.println("change to pcm success");
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }finally {
+        } finally {
             runtime.freeMemory();
         }
     }
@@ -74,6 +75,7 @@ public class FfmpegUtil {
         /*执行ffmpeg.exe,前面是ffmpeg.exe的地址，中间是需要转换的文件地址，后面是转换后的文件地址。-i是转换方式，意思是可编码解码，
            -acodec copy output.mp3 重新编码并复制到新文件中 -ss 开始截取的时间点 ,-t 截取音频时间长度*/
         //Process p = run.exec(new File(webroot).getAbsolutePath() + "/ffmpeg -y -i " + sourcePath + " -vn -acodec copy -ss " + startTime + " -t " + endTime + " " + targetPath);
+        Runtime runtime = Runtime.getRuntime();
         List<String> commands = new java.util.ArrayList<String>();
         commands.add(ffmpegbinPath);
         commands.add("-y");
@@ -95,11 +97,20 @@ public class FfmpegUtil {
             ProcessBuilder builder = new ProcessBuilder();
             builder.command(commands);
             builder.redirectErrorStream(true);
-            builder.start();
+            Process process = builder.start();
+            /**等待线程结束*/
+            process.waitFor();
+            /** 休眠6秒后，关闭ffmpeg程序*/
+           /* Thread.sleep(1000);
+            if (process.isAlive()) {
+                process.destroyForcibly();
+            }*/
             System.out.println("audio cut success");
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        } finally {
+            runtime.freeMemory();
         }
 
     }
@@ -177,20 +188,20 @@ public class FfmpegUtil {
     }
 
 
-    /*public static void main(String[] args) {
-        String path = "C:\\Users\\DX\\Desktop\\music\\jingweishengming.wav";
+    public static void main(String[] args) {
+        String path = "C:\\Users\\DX\\Desktop\\music\\147s.wav";
         String sPath = "C:\\Users\\DX\\Desktop\\music\\use.wav";
         String tPath = "C:\\Users\\DX\\Desktop\\music\\use1.wav";
         String pcmPath = "C:\\Users\\DX\\Desktop\\music\\q.pcm";
 
         try {
             //new FfmpegUtil().changeAudioToPcm(tPath, pcmPath, "ffmpeg/bin/ffmpeg");
-            new FfmpegUtil().CutAudio(path, sPath, "60", "200", "ffmpeg/bin/ffmpeg");
-            //new FfmpegUtil().CutAudio(sPath, tPath, "60", "200");
-            //new FfmpegUtil().CutAudio(tPath, sPath, "0", "200");
-            //System.out.println(new FfmpegUtil().getAudioTime(pcmPath));
+            new FfmpegUtil().CutAudio(path, sPath, "0", "200", "ffmpeg/bin/ffmpeg");
+            new FfmpegUtil().CutAudio(sPath, tPath, "60", "200", "ffmpeg/bin/ffmpeg");
+            new FfmpegUtil().CutAudio(tPath, sPath, "0", "200", "ffmpeg/bin/ffmpeg");
+            //System.out.println(new FfmpegUtil().getAudioTime(pcmPath),"ffmpeg/bin/ffmpeg");
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }*/
+    }
 }
