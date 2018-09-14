@@ -60,7 +60,9 @@ public class AdressRouteController {
             return "login";
         }
         String filepath = redisFileService.getFilePathFromRedis(username + "filepath");
-        deleteFileService.delTempChild(filepath);
+        if (filepath != null && !("").equals(filepath)) {
+            deleteFileService.delTempChild(filepath);
+        }
         //获取真实ip
         String ip = request.getHeader("x-forwarded-for");
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
