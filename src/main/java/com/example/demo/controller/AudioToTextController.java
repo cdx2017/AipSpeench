@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dao.AipInitPathDao;
 import com.example.demo.service.AudioTextService;
+import com.example.demo.service.DeleteFileService;
 import com.example.demo.service.RedisFileService;
 import com.example.demo.service.WavCutService;
 import io.swagger.annotations.*;
@@ -30,6 +31,9 @@ public class AudioToTextController {
     @Autowired
     private AipInitPathDao aipInitPathDao;
 
+    @Autowired
+    private DeleteFileService deleteFileService;
+
     /**
      * 音频转化为文字
      *
@@ -44,18 +48,17 @@ public class AudioToTextController {
     })
     @PostMapping(value = "/AudioToText")
     @ResponseBody
-    public Object AudioToText(String source, int rate) {
-
+    public Object AudioToText(String source, int rate, String username) {
         JSONArray jsonArray = new JSONArray();
-        String target = aipInitPathDao.getAllByUsePlace("local").getDirPath() + "change.pcm";
+        String target = aipInitPathDao.getAllByUsePlace(username).getDirPath() + username + ".pcm";//C:/music/cdx.pcm
         if ("myPath".equals(source)) {
-            int time = redisFileService.getFileTimeFromRedis("time");
-            String filepath = redisFileService.getFilePathFromRedis("filepath");
+            int time = redisFileService.getFileTimeFromRedis(username + "time");
+            String filepath = redisFileService.getFilePathFromRedis(username + "filepath");
 
             if (time > 60) {
-                String newpath = redisFileService.getFilePathFromRedis("newpath");
+                String newpath = redisFileService.getFilePathFromRedis(username + "newpath");
                 wavCutService.WavCutIgnoreEnd(filepath, newpath, "0");//备份上传的音频用来切割
-                String cutpath = redisFileService.getFilePathFromRedis("cutpath");
+                String cutpath = redisFileService.getFilePathFromRedis(username + "cutpath");
                 int i = 1;
                 for (int t = time / 60 + 1; t > 0; t--, i++) {
                     if (t >= 2) {
@@ -68,6 +71,8 @@ public class AudioToTextController {
                     } else {
                         System.out.println("The last minute:");//最后一分钟识别
                         jsonArray.add(audioTextService.AdToTx(newpath, rate, target));
+                        deleteFileService.delTempChild(newpath);
+                        deleteFileService.delTempChild(cutpath);
                     }
                 }
             } else {
@@ -75,6 +80,7 @@ public class AudioToTextController {
                 jsonArray.add(audioTextService.AdToTx(filepath, rate, target));
             }
             System.out.println("complete!");
+            deleteFileService.delTempChild(target);
             return jsonArray;
         } else {
             System.out.println("start:");//一分钟内识别

@@ -30,12 +30,14 @@
 <br>
 <%--音频上传--%>
 <h2> 请您选择需要上传的音频文件</h2>
-<p style="color: #ae4c4c">注意：音频文件只支持：wav、mp3、pcm、m4a、mp4</p>
+<p style="color: #ae4c4c">注意：音频文件只支持：wav、mp3、pcm、m4a、mp4;</p>
+<p style="color: #ae4c4c">           音频文件最大支持：100M.</p>
 <form id="form1" name="form1" method="post" action="/route/uploadFile" enctype="multipart/form-data">
     <table border="0">
         <tr>
+            <input type="text" name="username" value="${param.username}" hidden="true"/>
             <td>上传文件：</td>
-            <td><input name="file" id="file" type="file" size="20"></td>
+            <td><input name="file" id="file" type="file" size="20" accept="audio/*"></td>
         </tr>
         <tr>
             <td></td>

@@ -18,8 +18,8 @@
 <div style="text-align:center;">
     <input type="button" name="submit" value="开始识别" onclick="change()">
 
-    <form action="/route/main" method="get">
-        <%--<input type="text" name="name" value="" hidden="true"/>--%>
+    <form action="/route/main" method="post">
+        <input type="text" name="username" value="${param.username}" hidden="true"/>
         <p><input type="submit" value="返回主页"
                   style="color: #00c6ff;background-color: #ffffff;border:none;font-size: 20px;"/></p>
     </form>
@@ -44,7 +44,7 @@
             type: "POST",//方法类型
             dataType: "json",//预期服务器返回的数据类型
             url: "/api/v1/AudioToText",//url
-            data: {"source": "myPath", "rate": 16000},
+            data: {"source": "myPath", "rate": 16000,"username":"${param.username}"},
             success: function (result) {
                 var str = "";
                 if (result.length) {

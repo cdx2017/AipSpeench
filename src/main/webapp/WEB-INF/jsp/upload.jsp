@@ -13,7 +13,7 @@
         <tr>
             <td>上传人：</td>
             <td>
-                <input name="filename" type="text" id="filename" size="20" ></td>
+                <input name="username" type="text" id="username" size="20" ></td>
         </tr>
         <tr>
             <td>上传文件：</td>

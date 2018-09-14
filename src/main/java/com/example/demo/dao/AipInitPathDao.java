@@ -15,12 +15,15 @@ public class AipInitPathDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public AipInitPath getAllByUsePlace(String usePlace) {
+    public AipInitPath getAllByUsePlace(String username) {
+        String usePlace = "local";
         AipInitPath aipInitPath = null;
-        String sql = " select * from aip_init_path where usePlace = ? ";
-        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, usePlace);
+        String sql = " select * from aip_init_path where usePlace = ? and username= ? ";
+        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, usePlace, username);
         while (rows.next()) {
             aipInitPath = new AipInitPath();
+            aipInitPath.setUsername(rows.getString("username"));
+            aipInitPath.setPassword(rows.getString("password"));
             aipInitPath.setFfmpeg_path(rows.getString("ffmpeg_path"));
             aipInitPath.setDirPath(rows.getString("dirPath"));
         }

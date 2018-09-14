@@ -40,8 +40,7 @@
     </div>
 </div>
 <div style="text-align:center;">
-    <p><a href="http://localhost:8998/route/main">返回首页</a></p>
-    <%--<p><a href="http://119.27.163.190:8666/index">重新登录</a></p>--%>
+    <p><a href="/route/login">返回首页</a></p>
 </div>
 </body>
 </html>
