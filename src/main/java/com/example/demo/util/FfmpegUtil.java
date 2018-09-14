@@ -188,7 +188,7 @@ public class FfmpegUtil {
     }
 
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         String path = "C:\\Users\\DX\\Desktop\\music\\147s.wav";
         String sPath = "C:\\Users\\DX\\Desktop\\music\\use.wav";
         String tPath = "C:\\Users\\DX\\Desktop\\music\\use1.wav";
@@ -203,5 +203,5 @@ public class FfmpegUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }
